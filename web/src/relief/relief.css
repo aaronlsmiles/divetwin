@@ -1,0 +1,5 @@
+.relief { display: grid; gap: 8px; justify-items: start; }
+.relief-frame { width: 100%; aspect-ratio: 1; background: var(--stage); display: grid; place-items: center; position: relative; overflow: hidden; }
+.relief-frame > p { color: var(--stage-muted); margin: 0; }
+.relief-canvas { width: 100% !important; height: 100% !important; touch-action: pan-y; cursor: grab; }   /* a vertical swipe scrolls the page; a horizontal drag orbits */
+.relief-still { width: 100%; height: auto; aspect-ratio: 16 / 9; image-rendering: pixelated; }

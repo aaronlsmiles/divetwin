@@ -1,0 +1,73 @@
+/* The darkroom well: the same ink in both themes (docs/DESIGN.md). Layout of .stage/.panes comes from shell.css. */
+/* both panes start at the same height whatever their captions hold: a 32 px head row, then the 16:9 frame */
+.stage .panes { align-items: start; }
+/* the head row is 28 px on a desktop, like the scrubber's controls; 44 px touch targets on a phone */
+.pane > h2 { margin: 0; min-height: 28px; display: flex; align-items: center; }
+.pane-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 28px; }
+@media (min-width: 641px) { .pane-head .seg-opt { height: 26px; } }
+.pane-head h2 { margin: 0; }
+.pane-frame { position: relative; aspect-ratio: 16 / 9; width: 100%; background: #000; overflow: hidden; border: 0; display: block; }
+.pane-frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; }
+.pane-frame video[hidden] { display: none; }
+.pane .cap { color: var(--stage-muted); font-size: var(--fs-small); line-height: 1.5; }
+.stage .seg-label { color: var(--stage-muted); }
+.stage .seg-track { background: transparent; border-color: var(--stage-muted); }
+.stage .seg-opt { color: var(--stage-muted); }
+.stage .seg-opt + .seg-opt { border-left-color: var(--stage-muted); }
+.stage .seg-opt.is-on { background: var(--stage-text); color: var(--stage); }
+.stage .seg-opt:has(input:focus-visible) { outline-color: var(--stage-text); }
+@media (hover: hover) and (pointer: fine) { .stage .seg-opt:hover { color: var(--stage-text); background: rgba(236, 235, 230, .08); } }
+/* past a cap or a loss: a line on the real pane's flat grey saying why, and the way back */
+.pane-notice { position: absolute; left: 12px; right: 12px; bottom: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  padding: 10px 12px; background: var(--stage); color: var(--stage-text); font-size: var(--fs-small); line-height: 1.4; }
+.pane-notice p { margin: 0; flex: 1 1 24ch; }
+.pane-notice .btn { height: 28px; background: transparent; color: var(--stage-text); border-color: var(--stage-muted); }
+@media (hover: hover) and (pointer: fine) { .pane-notice .btn:hover { background: rgba(236, 235, 230, .12); } }
+@media (max-width: 760px) { .pane-notice { left: 8px; right: 8px; bottom: 8px; padding: 8px; } .pane-notice .btn { height: 44px; } }
+.stage-error { color: var(--stage-text); font-size: var(--fs-small); }
+/* Phones: the Heat/Bare switch keeps its own width beside "The dream", so the heading stays on one line. */
+@media (max-width: 480px) {
+  .pane-head .seg { width: auto; }
+  .pane-head .seg-track { display: inline-flex; }
+  .pane-head .seg-opt { flex: none; padding: 0 16px; }
+}
+
+.swatch { display: inline-block; vertical-align: -3px; flex: none; }
+.swatch.grey { width: 14px; height: 14px; margin-top: 2px; }
+.swatch.outline { width: 28px; height: 16px; outline-style: solid; outline-offset: -2px; background: rgba(236, 235, 230, .08); }
+
+/* The key strip (design pass, 4 Nov): one row under the scrubber for the whole stage, so the frames, the D curve and the key read
+   top to bottom. The marks (the real pane's grey first, then the heat's hatch and outline), the two ramps on one line each, and the
+   map of where mono depth errs with its words beside it. 81 px tall at 1440: the evidence row's headers show on the first screen. */
+.key-strip { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px 32px; align-items: start; margin-top: 4px;
+  color: var(--stage-muted); font-size: var(--fs-small); line-height: 1.4; }
+.marks { display: grid; gap: 4px; align-content: start; margin: 0; padding: 0; list-style: none; }
+.marks li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; align-items: start; }
+.marks .key-real { grid-template-columns: 28px minmax(0, 1fr); }
+.marks .key-real .swatch { justify-self: center; }
+.marks strong { font-weight: 600; color: var(--stage-text); }
+.ramps { display: grid; gap: 4px; align-content: start; }
+.ramp { display: grid; grid-template-columns: 48px max-content; align-items: center; gap: 8px; }
+.ramp-bar { height: 10px; width: 48px; }
+.ramp-scale { margin: 0; color: var(--stage-muted); contain: inline-size; }   /* wraps inside the ramps' width, never widens it */
+.bare-note { margin: 0; max-width: 32ch; color: var(--stage-muted); }
+
+.floor-thumb { margin: 0; display: grid; grid-template-columns: 144px 272px; gap: 0 12px; align-items: start; }
+.floor-thumb img { width: 144px; height: 81px; background: #000; object-fit: cover; }
+.floor-thumb figcaption { display: grid; gap: 6px; color: var(--stage-muted); font-size: var(--fs-small); line-height: 1.4; }
+.floor-keys { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.floor-key { display: inline-flex; align-items: center; gap: 6px; }
+.floor-key .ramp-bar { width: 48px; flex: none; }
+.floor-missing { margin: 0; width: 144px; min-height: 81px; display: grid; place-items: center; text-align: center; border: 1px solid var(--stage-muted); color: var(--stage-muted); font-size: var(--fs-small); }
+
+/* Narrower than the stage's one row: the marks and the ramps side by side, the map under them with its words beside it. */
+@media (max-width: 1180px) {
+  .key-strip { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .ramp { grid-template-columns: 48px minmax(0, 1fr); }
+  .key-strip > [data-floor-map], .key-strip > .pw-note { grid-column: 1 / -1; }
+  .floor-thumb { grid-template-columns: 144px minmax(0, 1fr); }
+}
+/* Phones: one column, in reading order. */
+@media (max-width: 760px) {
+  .key-strip { grid-template-columns: minmax(0, 1fr); }
+}

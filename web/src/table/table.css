@@ -1,0 +1,32 @@
+.clip-table .th-btn { background: none; border: 0; padding: 4px 0; color: inherit; font: inherit; cursor: pointer; white-space: nowrap; min-height: 24px; }
+.clip-table .row-btn { background: none; border: 0; padding: 0; color: var(--text); font: inherit; text-align: left; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.clip-table tbody tr { cursor: pointer; }
+/* an engine's name is one word: "Gen-4.5" never breaks after its hyphen in a narrow column (768: it did) */
+.clip-table td[data-col="engine"], .clip-table td[data-col="prompt"] { white-space: nowrap; }
+.clip-table tbody tr.is-active { background: var(--raised); }
+.clip-table tbody tr.is-active .row-btn { font-weight: 600; }
+.clip-table .unit { color: var(--faint); }
+.clip-table td.over { font-weight: 600; }
+/* the current row sits on --raised, where --faint falls under 4.5:1 (3.9 on paper): its unit and dashes take --muted */
+.clip-table tbody tr.is-active .unit, .clip-table tbody tr.is-active .dash, .clip-table tbody tr.is-active td[data-label]::before { color: var(--muted); }
+@media (hover: hover) and (pointer: fine) { .clip-table tbody tr:hover { background: var(--raised); } }
+/* phone: two-line rows in three equal columns. Line 1 is the breadcrumb with its length (drawn after the recording, the row's button
+   already names the whole clip), then D; line 2 is V, the departure and the travel; a 10 s dive adds D and V at 10 s as a third line.
+   Every cell wraps rather than clips. */
+@media (max-width: 640px) {
+  .clip-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .clip-table, .clip-table tbody { display: block; }
+  .clip-table tr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px 12px; padding: 10px 0; border-top: 1px solid var(--rule); }
+  .clip-table td, .clip-table tbody td.r { border: 0; padding: 0; min-width: 0; white-space: normal; overflow-wrap: anywhere; text-align: left; }
+  .clip-table td[data-col="recording"] { grid-column: 1 / 3; grid-row: 1; }
+  .clip-table td[data-col="recording"]::after { content: attr(data-crumb); content: attr(data-crumb) / ""; color: var(--muted); }
+  .clip-table td[data-col="engine"], .clip-table td[data-col="prompt"], .clip-table td[data-col="length"] { display: none; }
+  .clip-table td[data-col="d5"] { grid-column: 3; grid-row: 1; }
+  .clip-table td[data-col="v5"] { grid-column: 1; grid-row: 2; }
+  .clip-table td[data-col="departure"] { grid-column: 2; grid-row: 2; }
+  .clip-table td[data-col="travel"] { grid-column: 3; grid-row: 2; }
+  .clip-table td[data-col="d10"] { grid-column: 1; grid-row: 3; }
+  .clip-table td[data-col="v10"] { grid-column: 2; grid-row: 3; }
+  .clip-table td[data-col="d10"]:has(> .dash), .clip-table td[data-col="v10"]:has(> .dash) { display: none; }
+  .clip-table td[data-label]::before { content: attr(data-label) " "; color: var(--faint); font-size: var(--fs-small); }
+}

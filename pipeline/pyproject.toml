@@ -1,0 +1,23 @@
+[project]
+name = "divetwin-pipeline"
+version = "0.1.0"
+description = "Dive Twin offline pipeline"
+requires-python = ">=3.12"
+dependencies = [
+    "av>=19.0.2",
+    "modal==1.6.3",
+    "numba>=0.68.1",
+    "numpy>=2.5.4",
+    "opencv-python-headless>=5.0.0.93",
+    "pyarrow>=26.0.0",
+    "scipy>=1.18.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

@@ -1,0 +1,102 @@
+/* In plain words: the second voice, in blue pencil (docs/DESIGN.md; the hub's docs/plain-words.md).
+   Animators rough in blue before they ink. Blue marks only this voice; gold keeps its one meaning here (D above 3).
+   The text stays ink for legibility; the wash, the hand-drawn rule, the label and the marks carry the blue.
+   One look with studionephele.com's layer and the explorer's: the same tokens, mark, rule and words.
+   The wash alone sets the layer apart, with no rules. No entrance motion: the layer appears when asked and stays still.
+   Pencil blue never sits over the media (call 86): only on its own wash, beside the frames. */
+
+.pw-invite, .pw-band, .pw-note { background: var(--pencil-wash); }
+.pw-mark { width: 16px; height: 16px; flex: none; color: var(--pencil); }
+
+/* The invite: one slim line under the finding, in the title's column (design pass, 4 Nov: it no longer takes a full-width row). */
+.pw-invite { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; width: fit-content; max-width: 100%; min-height: 40px; margin-top: 8px; padding: 4px 12px; color: var(--pencil-ink); }
+.pw-lead { font-weight: 600; }
+.pw-btn { display: inline-flex; align-items: center; gap: 6px; min-height: var(--control-h); padding: 0 12px; background: transparent;
+  border: 1px solid var(--pencil-ink); color: var(--pencil-ink); font-weight: 600; cursor: pointer; transition: transform var(--fast) var(--ease); }
+@media (hover: hover) and (pointer: fine) {
+  .pw-btn:hover { background: color-mix(in srgb, var(--pencil) 16%, transparent); }
+  .pw-quiet:hover { text-decoration-thickness: 2px; }
+  .pw-map a:hover { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+}
+.pw-btn:active { transform: scale(.97); }
+.pw-quiet { display: inline-flex; align-items: center; min-height: var(--control-h); background: none; border: 0; padding: 0;
+  color: var(--pencil-ink); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+/* The chapter band, on the explorer's pattern: the title, where you are and the way on in a rail at the left; the story beside it,
+   in two columns on wide screens so the band stays short and the evidence stays near; the story's map at the right edge. */
+.pw-band { display: grid; grid-template-columns: minmax(200px, 3fr) minmax(0, 7fr) max-content;
+  grid-template-areas: "head text map" "foot text map"; grid-template-rows: auto 1fr; column-gap: 48px; align-items: start;
+  margin-top: var(--gap); padding: 24px 24px 20px; scroll-margin-top: calc(var(--bar-h) + 8px); }
+.pw-band:focus { outline: none; }
+.pw-band:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+.pw-head { grid-area: head; }
+.pw-title { display: flex; align-items: center; gap: 8px; font-size: var(--fs-section); font-weight: 700; line-height: 1.35; color: var(--text); }
+.pw-pos { margin-top: 4px; padding-left: 24px; font-size: var(--fs-body); font-weight: 600; color: var(--pencil-ink); }
+.pw-band .pw-text { grid-area: text; max-width: none; columns: 2; column-gap: 40px; }
+.pw-band .pw-text p { break-inside: avoid; }
+.pw-text { position: relative; padding-left: 20px; max-width: 62ch; font-size: var(--fs-section); line-height: 1.55; color: var(--text); }
+.pw-text p + p { margin-top: 8px; }
+/* the hand-drawn rule: a wobbling double stroke, tiled down the text */
+.pw-text::before {
+  content: ""; position: absolute; left: 0; top: 3px; bottom: 3px; width: 8px; background: var(--pencil);
+  -webkit-mask: var(--pw-rule-mask) 0 0 / 8px 96px repeat-y; mask: var(--pw-rule-mask) 0 0 / 8px 96px repeat-y;
+}
+.pw-foot { grid-area: foot; display: flex; flex-wrap: wrap; align-items: center; gap: 0 24px; margin-top: 12px; padding-left: 24px; }
+.pw-next { display: inline-flex; align-items: center; gap: 6px; min-height: var(--control-h); color: var(--pencil-ink); font-weight: 600; text-underline-offset: 3px; }
+
+.pw-map { grid-area: map; }
+.pw-map ol { display: grid; gap: 4px; }
+.pw-map a { position: relative; display: inline-flex; align-items: center; gap: 12px; min-height: 30px; padding-right: 4px; font-size: var(--fs-section); color: var(--muted); text-decoration: none; }
+.pw-map a[aria-current="step"] { color: var(--text); font-weight: 600; }
+.pw-n { width: 12px; text-align: center; color: var(--pencil-ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+/* the loop goes round the whole chapter, number and name, like a grease-pencil ring on a contact sheet */
+.pw-ring { position: absolute; left: -10px; top: -3px; width: calc(100% + 18px); height: calc(100% + 6px); max-width: none; color: var(--pencil); pointer-events: none; overflow: visible; }
+
+/* Narrower: one column of story, and the map goes (the rail still says where you are). */
+@media (max-width: 1279px) {
+  .pw-band { grid-template-columns: minmax(180px, 3fr) minmax(0, 8fr); grid-template-areas: "head text" "foot text"; }
+  .pw-band .pw-text { columns: 1; max-width: 62ch; }
+  .pw-map { display: none; }
+}
+/* Phones and tablets: title, story, then the way on. */
+@media (max-width: 1023px) {
+  .pw-band { display: block; padding: 16px 16px 8px; }
+  .pw-head { margin-bottom: 12px; }
+  .pw-foot { margin-top: 8px; padding-left: 20px; }
+}
+/* Phones: the invite keeps to one line (the button says it all). */
+@media (max-width: 479px) { .pw-lead { display: none; } .pw-invite { gap: 4px 16px; } }
+
+/* A note pinned beside a part of the page. */
+.pw-note { display: flex; gap: 10px; max-width: 64ch; padding: 12px 16px 12px 12px; }
+.pw-note .pw-mark { margin-top: 4px; }
+.pw-note .pw-text { padding-left: 16px; }
+.panel > .pw-note { margin-bottom: 12px; }
+.prose > .pw-note { margin-top: 4px; }
+.pw-dd { margin: 4px 0 0; }
+
+/* The top bar's switch, pressed while the layer is on. */
+.plain-btn { display: inline-flex; align-items: center; gap: 6px; }
+.plain-btn[aria-pressed="true"] { color: var(--pencil-ink); text-decoration: underline; text-decoration-color: var(--pencil); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+
+/* On the stage (the darkroom, ink in both themes: tokens.css gives the pencil its ink-ground values there). The notes sit beside
+   the frames, never on them. */
+.stage .pw-note .pw-text { color: var(--stage-text); }
+/* Wide: the two pane notes sit in one row above their frames (they come first in the DOM, so the grid's own row flow puts each
+   above its pane); in the key strip the map's note sits under the marks and the ramps, beside the map. */
+@media (min-width: 1181px) {
+  .key-strip > .pw-note { grid-column: 1 / 3; grid-row: 2; }
+  .key-strip:has(> .pw-note) > [data-floor-map] { grid-column: 3; grid-row: 1 / span 2; }
+}
+/* Phones: the numbers' V note takes the whole width, not half of the two-column grid. */
+@media (max-width: 760px) { .numbers > div:has(.pw-dd) { grid-column: 1 / -1; } }
+
+/* Forced colours drop backgrounds and masks: keep a visible left border on the band, the invite and the notes. */
+@media (forced-colors: active) {
+  .pw-invite, .pw-band, .pw-note { border-left: 4px solid CanvasText; }
+  .pw-text::before { display: none; }
+}
+
+:root {
+  --pw-rule-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 96' preserveAspectRatio='none'%3E%3Cpath d='M4.5 0C6.6 14 2 28 4 46S6.4 80 3.6 96' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round'/%3E%3Cpath d='M3 8C4.6 24 1.4 40 3 56S5 86 3.2 92' fill='none' stroke='%23000' stroke-opacity='.5' stroke-width='.9' stroke-linecap='round'/%3E%3C/svg%3E");
+}

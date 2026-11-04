@@ -1,0 +1,18 @@
+{
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/media/(.*\\.mp4)", "destination": "https://media.studionephele.com/divetwin/v1/$1", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/((?!media/|assets/|film/).*)", "destination": "/" }
+  ],
+  "headers": [
+    { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
+    { "source": "/media/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }] },
+    { "source": "/film/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }] },
+    { "source": "/(.*)", "headers": [
+      { "key": "X-Content-Type-Options", "value": "nosniff" },
+      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+    ] }
+  ]
+}

@@ -1,0 +1,68 @@
+
+/* Geist and Geist Mono (OFL), the house faces, self-hosted: tools/font/build_font.py; Geist's tnum swaps digits only. */
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/geist-latin.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/geist-mono-latin.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Achromatic ledger on paper (docs/DESIGN.md). Gold marks only D > 3 on this page; selection is ink. */
+:root {
+  color-scheme: light;
+  --ground: #e2e2de; --surface: #ecebe7; --raised: #d3d3ce;
+  --border: #cfcec7; --rule: #dcdbd5; --control: #8a857c;
+  --text: #1c1915; --muted: #574e44; --faint: #6b6359; --context: #8a857c;
+  --gold: #c4922a; --gold-line: #9a6a12; --on-gold: #1c1915;
+  --neg-bg: #f1dcd6; --neg-ink: #7d1f1a;
+  --grid: #d6d5ce;
+  /* blue pencil: the plain-words voice only (src/plainwords/); the same values as studionephele.com's tokens.css */
+  --pencil: #4a82c4; --pencil-ink: #1b4a8a; --pencil-wash: #d9e4f2;
+
+  /* the darkroom well under the media and the scrubber: the same in both themes */
+  --stage: #1c1915; --stage-text: #ecebe6; --stage-muted: #b3aa9e;
+  /* the darkroom edge: on paper the well is its own edge; on ink it would melt into the ground, so it takes a 1 px rule */
+  --stage-edge: transparent;
+
+  --font: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --fs-title: 24px; --fs-section: 16px; --fs-body: 14px; --fs-small: 12px;
+  --gap: 16px; --pad: 16px; --margin: 24px;
+  --control-h: 32px; --bar-h: 48px;
+  --ease: cubic-bezier(.2, .7, .2, 1); --fast: 160ms; --move: 240ms;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #1c1915; --surface: #23201c; --raised: #2c2924;
+    --border: #37332d; --rule: #2e2a25; --control: #6e675d;
+    --text: #ecebe6; --muted: #b3aa9e; --faint: #9c9488; --context: #7d766b;
+    --gold: #d6a43c; --gold-line: #d6a43c; --on-gold: #1c1915;
+    --neg-bg: #3a1f1b; --neg-ink: #f0a69b;
+    --grid: #33302a;
+    --pencil: #6a9fe0; --pencil-ink: #aecbf4; --pencil-wash: #1f2b3b;
+    --stage-edge: #3d3831;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #1c1915; --surface: #23201c; --raised: #2c2924;
+  --border: #37332d; --rule: #2e2a25; --control: #6e675d;
+  --text: #ecebe6; --muted: #b3aa9e; --faint: #9c9488; --context: #7d766b;
+  --gold: #d6a43c; --gold-line: #d6a43c; --on-gold: #1c1915;
+  --neg-bg: #3a1f1b; --neg-ink: #f0a69b;
+  --grid: #33302a;
+  --pencil: #6a9fe0; --pencil-ink: #aecbf4; --pencil-wash: #1f2b3b;
+  --stage-edge: #3d3831;
+}
+@media (max-width: 640px) { :root { --margin: 16px; --control-h: 44px; } }
+/* The stage is the darkroom in both themes, so a plain-words note on it takes the pencil's ink-ground values (the dark set above). */
+.stage { --pencil: #6a9fe0; --pencil-ink: #aecbf4; --pencil-wash: #1f2b3b; }

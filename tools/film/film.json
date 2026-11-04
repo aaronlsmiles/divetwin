@@ -1,0 +1,22 @@
+{
+  "voice": {
+    "name": "Studio Nephele narrator",
+    "id": "318c59ab-d934-4bd4-86c5-272965b8d2f0",
+    "acting": "Conversational and quick, a wry smile; showing a friend something surprising.",
+    "speed": 1.0,
+    "context_generation": "bd4b264a-422a-4f8e-b01e-7d017ddc5763",
+    "source": "the studio voice, as in ~/projects/studio/prototypes/stilldrawn-explorer/film/build/films.json (film-audio rule: the studio voice or Aaron's own music)"
+  },
+  "lines": [
+    "This is a real tank, measured with a stereo camera. And this is a dream of it, made by a video model from one photograph.",
+    "The real side isn't a recording. It's the tank rebuilt from stereo, and seen again from wherever the dream's camera goes.",
+    "Grey is where no real camera ever looked. There, nothing can be checked, and the page says so.",
+    "The heat shows where the dream's tank disagrees with the real one. Orange is too near. Blue is too far.",
+    "The scrubber is the score. A D of one is no worse than measuring the real tank. At three, the tank has changed shape.",
+    "Here, just under four seconds in, the far wall opens into a corridor that isn't there. Every pixel is still checkable. Only the depth gives it away.",
+    "Across thirty-five clips, three leave the tank for good. And the dreams don't fill the tank. They open it up.",
+    "If video models are going to make worlds, test them against a measured place, frame by frame, and say where you can no longer check.",
+    "Dive Twin. Studio Nephele."
+  ],
+  "disclosure": "Data: UW-TransStereo, CC BY 4.0. Derived depth pictures CC BY-NC-SA 4.0. Clips by Runway Gen-4.5 and Wan 2.2."
+}

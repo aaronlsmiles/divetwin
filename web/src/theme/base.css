@@ -1,0 +1,27 @@
+/* The reset sits in a cascade layer, so every unlayered rule beats it. */
+@layer reset {
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--ground); color: var(--text);
+  font: 400 var(--fs-body)/1.43 var(--font); letter-spacing: 0;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+img, video, svg { display: block; max-width: 100%; }
+h1, h2, h3, p, figure, dl, dd, ul, ol { margin: 0; }
+p, li, dd, figcaption, caption { text-wrap: pretty; }
+ul, ol { padding: 0; list-style: none; }
+h1 { font-size: var(--fs-title); font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; text-wrap: balance; }
+h2 { font-size: var(--fs-section); font-weight: 600; line-height: 1.4; }
+a { color: inherit; text-underline-offset: 3px; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }  /* ink, not gold: gold means D > 3 only */
+.stage :focus-visible { outline-color: var(--stage-text); }
+::selection { background: var(--text); color: var(--ground); }
+.num, .tick { font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.faint { color: var(--faint); }
+.small { font-size: var(--fs-small); }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; } }
+}

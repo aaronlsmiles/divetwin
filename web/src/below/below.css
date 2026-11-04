@@ -1,0 +1,13 @@
+.below { display: grid; gap: var(--gap); margin-top: var(--gap); }
+.prose { display: grid; gap: 12px; max-width: none; }
+.prose > h2 { margin-bottom: 0; }
+.prose p, .prose li, .prose dd { max-width: 60ch; }   /* about 75 characters of Geist at 14 px (70ch measured 96-104) */
+.prose h3 { font-size: var(--fs-body); font-weight: 600; margin-top: 8px; }
+.how, .prov { display: grid; gap: 8px; margin: 0; }
+.how > div, .prov > div { display: grid; grid-template-columns: 11em minmax(0, 1fr); gap: 12px; }
+.how dt, .prov dt { color: var(--muted); }
+.how dd, .prov dd { margin: 0; }
+.notes, .credits { display: grid; gap: 8px; list-style: disc; padding-left: 20px; }
+.mono { font-family: var(--font-mono); font-size: var(--fs-small); overflow-wrap: anywhere; }
+.citation { overflow-wrap: anywhere; }
+@media (max-width: 640px) { .how > div, .prov > div { grid-template-columns: 1fr; gap: 2px; } }

@@ -1,0 +1,23 @@
+.numbers { margin: 0; display: grid; gap: 0; border-top: 1px solid var(--rule); }   /* the panel is the container: no box inside a box */
+.numbers > div { padding: 12px 0; border-top: 1px solid var(--rule); display: grid; gap: 2px; align-content: start; }
+.numbers > div:first-child { border-top: 0; }
+.numbers dt { font-size: var(--fs-small); color: var(--muted); }
+.numbers dd { margin: 0; }
+.numbers .num { font-size: 16px; font-weight: 600; }
+.numbers .n-note { font-size: var(--fs-small); color: var(--muted); line-height: 1.45; }
+.numbers .n-note .num { font-size: inherit; font-weight: inherit; }
+.numbers .unit { color: var(--faint); font-weight: 400; text-decoration: none; }
+/* the lead: 32 px, and gold only while D is above 3 (a gold fill under ink text on paper, gold text on ink) */
+.numbers .lead { font-size: 32px; line-height: 1.15; font-weight: 600; width: fit-content; padding: 0 4px; margin-left: -4px; }
+.numbers .lead.is-gold { background: var(--gold); color: var(--on-gold); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .numbers .lead.is-gold { background: transparent; color: var(--gold); } }
+:root[data-theme="dark"] .numbers .lead.is-gold { background: transparent; color: var(--gold); }
+@media (max-width: 1023px) {
+  .numbers { grid-template-columns: 1fr 1fr; column-gap: var(--gap); }
+  .numbers .n-lead { grid-column: 1 / -1; }
+  .numbers > div { border-left: 0; }
+  /* path agreement's note is the longest: it takes the whole width. With the plain-words note off, V and the distance pair up, so the
+     departure takes the whole width too and no cell sits beside a gap */
+  .numbers > .n-agree { grid-column: 1 / -1; }
+  .numbers:not(:has(.pw-dd)) > .n-dep { grid-column: 1 / -1; }
+}

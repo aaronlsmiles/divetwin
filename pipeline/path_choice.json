@@ -1,0 +1,10 @@
+{
+  "primary": "tracks",
+  "kill_rule_4": "holds",
+  "over_15pct": {
+    "tracks": [],
+    "icp": ["air", "freshwater", "freshwater-basicEnhance", "saltwater", "saltwater-pellets"]
+  },
+  "rule": "lower median endpoint error; ties within 2 % of travel go to icp",
+  "date": "2026-11-03"
+}

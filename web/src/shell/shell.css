@@ -1,0 +1,122 @@
+/* Shell: no sidebar, a 48 px bar on the ground (docs/DESIGN.md). */
+.skip { position: absolute; left: var(--margin); top: -60px; background: var(--text); color: var(--ground); padding: 8px 12px; z-index: 20; }
+.skip:focus { top: 8px; }
+
+.bar { position: sticky; top: 0; z-index: 10; height: var(--bar-h); display: flex; align-items: center; gap: 32px;
+  padding: 0 var(--margin); background: var(--ground); border-bottom: 1px solid var(--border); }
+.brand { display: inline-flex; align-items: center; min-height: 32px; gap: 8px; font-weight: 800; font-size: 16px; letter-spacing: -0.01em; text-decoration: none; white-space: nowrap; }
+.bar-nav { display: flex; align-items: center; justify-content: flex-end; flex: 1; gap: 24px; }
+.bar-nav a { color: var(--muted); text-decoration: none; height: var(--bar-h); display: inline-flex; align-items: center; }
+@media (hover: hover) and (pointer: fine) { .bar-nav a:hover { color: var(--text); transition: color var(--fast) var(--ease); } }
+.theme-btn { background: none; border: 0; padding: 0; height: 32px; color: var(--muted); cursor: pointer; }
+@media (hover: hover) and (pointer: fine) { .theme-btn:hover { color: var(--text); } }
+.bar-menu { display: none; }
+
+@media (max-width: 760px) {
+  .bar { gap: 12px; justify-content: space-between; }
+  .bar-menu { display: inline-flex; align-items: center; height: 44px; padding: 0 12px; margin-right: -12px; background: none; border: 0; cursor: pointer; font-weight: 600; }
+  .bar-nav { display: none; position: fixed; inset: var(--bar-h) 0 0 0; background: var(--ground); flex-direction: column; align-items: stretch;
+    justify-content: flex-start; padding: 8px var(--margin) 24px; gap: 0; }
+  .bar-nav.is-open { display: flex; }
+  .bar-nav a, .theme-btn { height: 48px; font-size: 16px; border-bottom: 1px solid var(--rule); justify-content: flex-start; text-align: left; }
+}
+
+/* Page frame */
+.page { padding: 16px var(--margin) 48px; }
+.title-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
+.title-row h1:focus { outline: none; }
+.crumb { display: inline-block; max-width: 100%; vertical-align: top; }   /* an atom: the title breaks between crumbs; only a crumb wider than the line (a 60-character recording name) breaks inside, at its spaces */
+.finding { color: var(--muted); margin-top: 4px; font-size: 16px; line-height: 1.5; max-width: 36em; }  /* ~75 characters */
+.chip { display: inline-flex; align-items: center; min-height: 24px; padding: 3px 8px; background: var(--raised); color: var(--muted);
+  font-size: var(--fs-small); font-weight: 600; line-height: 1.5; flex: 0 1 auto; min-width: 0; }   /* wraps on the narrowest phones */
+.panel { background: var(--surface); border: 1px solid var(--border); padding: var(--pad); min-width: 0; }
+.panel > h2 { margin-bottom: 12px; }
+.panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.state-error { max-width: 60ch; display: grid; gap: 12px; justify-items: start; }
+
+/* Controls */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: var(--control-h); min-width: var(--control-h); padding: 0 12px;
+  background: var(--surface); border: 1px solid var(--control); color: var(--text); cursor: pointer; white-space: nowrap;
+  transition: transform var(--fast) var(--ease); }
+/* Colour eases only while a pointer hovers (a tap would leave it filled); a toggle by key, tap
+   or an unhovered click changes at once. The press scales any time. */
+@media (hover: hover) and (pointer: fine) { .btn:hover { background: var(--raised);
+  transition: background-color var(--fast) var(--ease), border-color var(--fast) var(--ease), color var(--fast) var(--ease), transform var(--fast) var(--ease); } }
+.btn:active { transform: scale(.97); }
+.btn[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: var(--ground); }
+/* a toggle (Play/Pause) changes state at once, hovered or not: only the press scales (design pass, motion audit) */
+@media (hover: hover) and (pointer: fine) { .btn[aria-pressed]:hover { transition: transform var(--fast) var(--ease); } }
+.btn-text { display: inline-flex; align-items: center; min-height: 24px; background: none; border: 0; padding: 0; color: var(--text); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+select.select { height: var(--control-h); padding: 0 28px 0 10px; border: 1px solid var(--control); background: var(--surface); border-radius: 0; }
+.field-label { display: block; font-size: var(--fs-small); color: var(--muted); margin-bottom: 4px; }
+
+.seg { border: 0; margin: 0; padding: 0; min-width: 0; }
+.seg-label { padding: 0; font-size: var(--fs-small); color: var(--muted); margin-bottom: 4px; }
+.seg-track { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--control); background: var(--surface); }
+.seg-opt { position: relative; display: inline-flex; align-items: center; height: calc(var(--control-h) - 2px); padding: 0 12px; cursor: pointer;
+  color: var(--muted); white-space: nowrap; }
+.seg-opt + .seg-opt { border-left: 1px solid var(--rule); }
+@media (hover: hover) and (pointer: fine) { .seg-opt:hover { color: var(--text); background: var(--raised);
+  transition: background-color var(--fast) var(--ease), color var(--fast) var(--ease); } }
+.seg-opt.is-on { background: var(--text); color: var(--ground); }
+.seg-opt.is-off { opacity: .55; cursor: not-allowed; }
+.seg-opt input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: inherit; }
+.seg-opt:has(input:focus-visible) { outline: 3px solid var(--text); outline-offset: 2px; z-index: 1; }
+/* phones: a switch spans the width and each wrapped row fills it, so no option sits alone in a gap */
+@media (max-width: 480px) {
+  .seg { width: 100%; }
+  .seg-track { display: flex; }
+  .seg-opt { flex: 1 1 auto; justify-content: center; height: var(--control-h); }
+  .btn-text { min-height: 44px; }
+}
+
+/* Tables */
+table.data { border-collapse: collapse; width: 100%; }
+.table-frame { overflow-x: auto; min-width: 0; }
+table.data th { font-weight: 400; font-size: var(--fs-small); color: var(--faint); text-align: left; padding: 6px 8px; white-space: nowrap; }
+table.data td { padding: 8px; border-top: 1px solid var(--rule); vertical-align: baseline; }
+table.data th:first-child, table.data td:first-child { padding-left: 0; }
+table.data th:last-child, table.data td:last-child { padding-right: 0; }
+table.data .num, table.data .r { text-align: right; white-space: nowrap; }
+.dash { color: var(--faint); }
+.pill-neg { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; background: var(--neg-bg); color: var(--neg-ink); font-size: var(--fs-small); font-weight: 600; white-space: nowrap; flex: none; }
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; background: var(--raised); color: var(--text); font-size: var(--fs-small); white-space: nowrap; flex: none; }
+
+
+/* Brand mark */
+.mark { width: 16px; height: 16px; flex: none; color: var(--text); }
+
+/* Stage: the darkroom well, the same in both themes */
+.stage { background: var(--stage); color: var(--stage-text); margin: var(--gap) 0 0; padding: var(--pad); display: grid; gap: 12px;
+  box-shadow: inset 0 0 0 1px var(--stage-edge); }
+.panes { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+.pane { display: grid; gap: 8px; min-width: 0; }
+.pane > h2 { color: var(--stage-text); }
+@media (max-width: 760px) { .panes { grid-template-columns: 1fr; } }
+
+/* Evidence row: 4 + 4 + 4 */
+.evidence { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap); margin-top: var(--gap); align-items: start; }   /* each card keeps its own height: no blank band under a short one */
+.evidence .ph { aspect-ratio: 1; display: grid; place-items: center; border: 1px dashed var(--control); color: var(--faint); font-size: var(--fs-small); }
+/* a tablet (761-1023): two plus one, the plan view and the relief side by side and the numbers across the full width under them. Three columns
+   here were 229 px each at 768 (task 4.6). The DOM order is the desktop's, so Tab and the reading order are what is seen. */
+@media (min-width: 761px) and (max-width: 1023px) {
+  .evidence { grid-template-columns: 1fr 1fr; }
+  .evidence > .panel-numbers { grid-column: 1 / -1; }
+}
+/* phone: one column; App renders the numbers first there (DOM order = visual order = Tab order), then the plan view, then the relief */
+@media (max-width: 760px) {
+  .evidence { grid-template-columns: 1fr; }
+}
+
+/* Title row: the title and the finding on the left, the picker on the right (docs/DESIGN.md) */
+.title-row { justify-content: space-between; align-items: flex-start; gap: 12px 24px; }   /* top-aligned: when a longer finding wraps, the picker stays under the pointer (task 4.6) */
+.title-text { min-width: 0; flex: 1 1 28em; }
+.picker { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: flex-end; min-width: 0; }
+.pick-select { display: grid; min-width: 0; flex: 1 1 0; }
+.pick-select .select { width: 100%; }
+@media (max-width: 640px) {
+  h1 { font-size: 20px; }
+  /* the recording's names are the longest ("Freshwater, enhanced"), so it takes the first row whole; engine and prompt share the second */
+  .picker { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 12px; }
+  .picker > :first-child, .picker > .seg { grid-column: 1 / -1; }
+}

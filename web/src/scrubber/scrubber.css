@@ -1,0 +1,44 @@
+/* The scrubber: a 96 px track block (28 px of controls over 68 px of tracks) with the start photograph in the left gutter. */
+.scrubber { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: var(--gap); align-items: start; color: var(--stage-text); }
+.start-fig { margin: 0; display: grid; gap: 4px; }
+.start-fig img { width: 112px; height: 63px; object-fit: cover; background: #000; }
+.start-fig figcaption { color: var(--stage-muted); font-size: var(--fs-small); line-height: 1.35; }
+.scrub-main { display: grid; gap: 0; min-width: 0; }
+.scrub-row { display: flex; align-items: center; gap: 12px; height: 28px; margin-bottom: 0; }
+.scrubber .btn { height: 28px; min-width: 28px; padding: 0 10px; background: transparent; color: var(--stage-text); border-color: var(--stage-muted); }
+.scrubber .btn[aria-pressed="true"] { background: var(--stage-text); color: var(--stage); border-color: var(--stage-text); }
+@media (hover: hover) and (pointer: fine) { .scrubber .btn:hover { background: rgba(236, 235, 230, .12); } .scrubber .btn[aria-pressed="true"]:hover { background: var(--stage-text); } }
+.readout { font-weight: 600; color: var(--stage-text); }
+.scrub-keys { margin-left: auto; color: var(--stage-muted); white-space: nowrap; }
+.key-d, .key-v { display: inline-block; min-width: 1.2em; text-align: center; font-weight: 600; color: var(--stage-text); }
+.key-v { margin-left: 12px; }
+.track-box { position: relative; height: 68px; margin-right: 40px; }   /* the right 40 px is the axis labels' gutter */
+.tracks { position: absolute; inset: 0; overflow: visible; }
+.range { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; opacity: 0; cursor: ew-resize; -webkit-appearance: none; appearance: none; background: transparent; touch-action: pan-y; }   /* a vertical swipe still scrolls the page */
+.range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 1px; height: 68px; }
+.range::-moz-range-thumb { width: 1px; height: 68px; border: 0; }
+/* the native control is invisible, so its focus ring is drawn on the track box instead */
+.track-box:has(.range:focus-visible) { outline: 3px solid var(--stage-text); outline-offset: 2px; }
+.track-box .range:focus-visible { outline: none; }
+
+.ref { stroke: var(--stage-muted); stroke-width: 1; stroke-dasharray: 3 3; fill: none; opacity: .8; }
+.ref-label { fill: var(--stage-muted); font-size: var(--fs-small); font-variant-numeric: tabular-nums; }
+.curve { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.curve.ink { stroke: var(--stage-text); }
+.curve.gold { stroke: var(--gold); }                   /* gold = D above 3, here and nowhere else on the stage */
+.curve.thin { stroke: var(--stage-muted); stroke-width: 1.5; }
+.departure { stroke: var(--gold); stroke-width: 2; }   /* the departure tick */
+.hatched { opacity: .55; }
+.cursor { stroke: var(--stage-text); stroke-width: 2; }
+.dot { fill: var(--stage-text); stroke: var(--stage); stroke-width: 1.5; }
+.dot.gold { fill: var(--gold); }
+
+@media (max-width: 760px) {
+  .scrubber { grid-template-columns: 56px minmax(0, 1fr); gap: 12px; }
+  .start-fig img { width: 56px; height: 32px; }
+  .start-fig figcaption { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .scrub-keys { display: none; }
+  .scrubber .btn { height: 44px; }
+  .scrub-row { height: 44px; }
+  .track-box { height: 68px; margin-right: 36px; }
+}

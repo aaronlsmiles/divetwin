@@ -1,0 +1,14 @@
+.plan { margin: 0; display: grid; gap: 8px; }
+.plan svg { width: 100%; height: auto; aspect-ratio: 1; background: var(--stage); }
+.plan .walls { fill: none; stroke: var(--stage-muted); stroke-width: 1.5; }
+.plan .far-wall { stroke: var(--stage-text); stroke-width: 3; }
+.plan .tick { stroke: var(--stage-muted); stroke-width: 1; }
+.plan .lbl { fill: var(--stage-text); font-size: var(--fs-small); font-variant-numeric: tabular-nums; }
+.plan .lbl.faint { fill: var(--stage-muted); }
+.plan .path { fill: none; stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.plan .path.ink { stroke: var(--stage-text); }
+.plan .path.gold { stroke: var(--gold); }              /* gold = D above 3 */
+.plan .stop line { stroke: var(--stage-muted); stroke-width: 2; }
+.plan .stop .stub { stroke-dasharray: 3 3; }
+.plan .cursor { fill: var(--stage-text); stroke: var(--stage); stroke-width: 2; }
+.plan .cursor.frozen { fill: none; stroke: var(--stage-muted); stroke-width: 2; }

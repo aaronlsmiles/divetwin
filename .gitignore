@@ -1,0 +1,54 @@
+# Dataset files (read from the local dataset copy, never committed)
+/data
+*.svo
+*.svo2
+*.parquet
+
+# Pipeline outputs
+runs/
+
+# Clips
+*.mp4
+*.mov
+
+# Weights
+*.pt
+*.pth
+*.safetensors
+*.ckpt
+
+# Arrays
+*.npz
+
+# Secrets
+.env*
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Web
+node_modules/
+dist/
+*.tsbuildinfo
+test-results/
+playwright-report/
+
+# Tooling
+.DS_Store
+.playwright-mcp/
+.vercel/
+.taste-skill/
+
+# Film (task 5.1): the cuts and the working files stay local; the narration reads (film/vo/*.wav) are Hume's, kept locally.
+# The page's own copy of the 16:9 cut ships with the build, so it is tracked (the *.mp4 rule above has an exception for it).
+film/out/
+film/.capture/
+film/vo/*.wav
+!web/public/film/*.mp4
+film/*.log
+
+# Deploy staging (task 6.2): the build copy and the Vercel project link
+/deploy/

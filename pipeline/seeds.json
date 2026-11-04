@@ -1,0 +1,206 @@
+{
+ "Air_texBtl_recording_07052025_231523": [
+  {
+   "frame": 34,
+   "obj": "bottle",
+   "box": [
+    1075,
+    115,
+    1305,
+    880
+   ]
+  },
+  {
+   "frame": 34,
+   "obj": "hand",
+   "box": [
+    890,
+    0,
+    1390,
+    300
+   ]
+  }
+ ],
+ "Freshwater_texBtl_recording_08052025_015831": [
+  {
+   "frame": 52,
+   "obj": "bottle",
+   "box": [
+    1145,
+    60,
+    1450,
+    1110
+   ]
+  },
+  {
+   "frame": 52,
+   "obj": "hand",
+   "box": [
+    1025,
+    0,
+    1540,
+    335
+   ]
+  },
+  {
+   "frame": 386,
+   "obj": "bottle",
+   "points": [
+    [
+     1216,
+     54
+    ]
+   ],
+   "labels": [
+    0
+   ],
+   "reason": "call 39: negative point on the pale glow disc at the top edge (not the bottle, which left at 385); SAM 2 tracked it as a moving bottle"
+  },
+  {
+   "frame": 389,
+   "obj": "bottle",
+   "points": [
+    [
+     1216,
+     54
+    ]
+   ],
+   "labels": [
+    0
+   ],
+   "reason": "call 39: negative point on the pale glow disc at the top edge (not the bottle, which left at 385); SAM 2 tracked it as a moving bottle"
+  }
+ ],
+ "Freshwater-basicEnhance_smtBtl_recording_09052025_153536": [
+  {
+   "frame": 15,
+   "obj": "bottle",
+   "box": [
+    1150,
+    0,
+    1580,
+    1242
+   ]
+  },
+  {
+   "frame": 15,
+   "obj": "hand",
+   "box": [
+    1090,
+    0,
+    1660,
+    340
+   ]
+  }
+ ],
+ "Saltwater_medBtl_recording_08052025_182447": [
+  {
+   "frame": 12,
+   "obj": "bottle",
+   "box": [
+    1180,
+    275,
+    1580,
+    1242
+   ]
+  },
+  {
+   "frame": 12,
+   "obj": "hand",
+   "box": [
+    830,
+    0,
+    1760,
+    560
+   ]
+  }
+ ],
+ "Saltwater-pellets_smtBtl-fill_recording_08052025_183311": [
+  {
+   "frame": 28,
+   "obj": "bottle",
+   "box": [
+    1135,
+    0,
+    1565,
+    1242
+   ]
+  },
+  {
+   "frame": 28,
+   "obj": "hand",
+   "box": [
+    1010,
+    0,
+    1700,
+    335
+   ]
+  },
+  {
+   "frame": 300,
+   "obj": "hand",
+   "box": [
+    1000,
+    60,
+    1320,
+    470
+   ],
+   "reason": "call 39: SAM 2 lost the hand at 251 in the murk; the hand and bottle are back at the far end (x 1000-1320), faint by 440 (visible with CLAHE until 452, gone at 454)"
+  },
+  {
+   "frame": 300,
+   "obj": "bottle",
+   "box": [
+    1095,
+    0,
+    1265,
+    810
+   ],
+   "reason": "call 39: same far-end position as at 250 (SAM 2's own bottle extent there); re-seed after the loss at 251"
+  },
+  {
+   "frame": 360,
+   "obj": "hand",
+   "box": [
+    1000,
+    60,
+    1320,
+    470
+   ],
+   "reason": "call 39: SAM 2 lost the hand at 251 in the murk; the hand and bottle are back at the far end (x 1000-1320), faint by 440 (visible with CLAHE until 452, gone at 454)"
+  },
+  {
+   "frame": 360,
+   "obj": "bottle",
+   "box": [
+    1095,
+    0,
+    1265,
+    810
+   ],
+   "reason": "call 39: same far-end position as at 250 (SAM 2's own bottle extent there); re-seed after the loss at 251"
+  },
+  {
+   "frame": 440,
+   "obj": "hand",
+   "box": [
+    1000,
+    60,
+    1320,
+    470
+   ],
+   "reason": "call 39: SAM 2 lost the hand at 251 in the murk; the hand and bottle are back at the far end (x 1000-1320), faint by 440 (visible with CLAHE until 452, gone at 454)"
+  },
+  {
+   "frame": 440,
+   "obj": "bottle",
+   "box": [
+    1095,
+    0,
+    1265,
+    810
+   ],
+   "reason": "call 39: same far-end position as at 250 (SAM 2's own bottle extent there); re-seed after the loss at 251"
+  }
+ ]
+}
