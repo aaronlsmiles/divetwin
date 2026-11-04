@@ -23,18 +23,18 @@ op run --env-file=$HOME/projects/studio/tools/stilldrawn-r2.env.op -- uv run too
 
 Uploads exactly the keys in `runs/assets/media_manifest.json` (`MEDIA.md` and the manifest itself are not uploaded) to the `stilldrawn-media` bucket under `divetwin/v1/`, each with `Cache-Control: public, max-age=31536000, immutable`, its content type and its sha256 as metadata. Every file is hashed against the manifest first; one mismatch stops the run before a byte is sent. Re-runs skip objects whose size and sha256 match. The Runway `gen.mp4` files go up byte for byte (C2PA credentials intact). A changed file goes to a new prefix (`v2/`), never over `v1/`. The account id comes from the environment through `op run`; it is in no committed file.
 
-## How `/media/` is served (`tools/deploy/vercel.json`, changed 5 Nov, hub call 90)
+## How `/media/` is served (`tools/deploy/vercel.json`, changed 4 Nov, hub call 90)
 
 - **`.mp4` is a 308 redirect** to `https://media.studionephele.com/divetwin/v1/…`. The page's `<video>` elements load without `crossOrigin`, so no CORS is needed, and the media host answers Range requests itself.
 - **JSON, PNG16 and JPEG media (203 files, 82 MB) ship as static files in the Vercel deployment**, under `/media/`, so the page's `fetch` and pixel reads are same-origin and need no CORS.
-- **Why no rewrite to the media host (found 4 and 5 Nov):** Vercel's edge caches an external rewrite by URL and ignores `Range`, so the first range it sees is replayed to every later request (`content-range: bytes 0-1477784/1477785` for a `bytes=-4096` request on an mp4; 100 bytes of `clips.json` after a `curl -r 0-99`). The Runway `gen.mp4`, whose `moov` atom is at the end, failed with `MEDIA_ERR_NETWORK`. Do not probe with a Range request against a rewritten path.
+- **Why no rewrite to the media host (found 4 Nov):** Vercel's edge caches an external rewrite by URL and ignores `Range`, so the first range it sees is replayed to every later request (`content-range: bytes 0-1477784/1477785` for a `bytes=-4096` request on an mp4; 100 bytes of `clips.json` after a `curl -r 0-99`). The Runway `gen.mp4`, whose `moov` atom is at the end, failed with `MEDIA_ERR_NETWORK`. Do not probe with a Range request against a rewritten path.
 - Anything else not a file falls back to `/` (the single page). `/assets/` is immutable for a year; `/film/` and `/media/` are one hour and must-revalidate.
 
 ## Domain (once; done)
 
 `vercel domains add divetwin.studionephele.com divetwin --scope "$VERCEL_SCOPE"` (run outside the linked `deploy/production/` folder; inside it the CLI takes one argument and adds to the linked project). Done 4 Nov.
 
-The CNAME is in place (5 Nov): `divetwin`, type CNAME, target `cname.vercel-dns.com`, **DNS only (grey cloud)** so Vercel issues the certificate, in the studionephele.com zone on Cloudflare. `https://divetwin.studionephele.com` answers 200. (Vercel also accepts an A record `76.76.21.21`, DNS only.) A production deploy also gets Vercel's default `divetwin.vercel.app`, kept as a fallback only: share the custom domain.
+The CNAME is in place (4 Nov): `divetwin`, type CNAME, target `cname.vercel-dns.com`, **DNS only (grey cloud)** so Vercel issues the certificate, in the studionephele.com zone on Cloudflare. `https://divetwin.studionephele.com` answers 200. (Vercel also accepts an A record `76.76.21.21`, DNS only.) A production deploy also gets Vercel's default `divetwin.vercel.app`, kept as a fallback only: share the custom domain.
 
 ## Check, live (signed out)
 

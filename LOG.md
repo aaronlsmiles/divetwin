@@ -886,7 +886,7 @@ Opus 5.5 · high, on Aaron's standing go (hub call 88), with the `publish-cleara
 
 **Media staging (task 6.2): what to strip.** Nothing inside any file. Upload exactly the 306 keys in `media_manifest.json`; leave out `runs/assets/MEDIA.md` and `runs/assets/media_manifest.json` (the record, not media). Do not re-encode or strip the Runway `gen.mp4`s: their C2PA credentials are the AI disclosure and carry no account data.
 
-**Before the repo goes public (done 5 Nov, see "Going public" below).** `spend.jsonl` held local scratch paths with the macOS username; STATUS named the Modal workspace (gate M); LOG.md line 228 had an absolute local path; the README said "the camera housing's flat port" where the page says "the tank's flat window".
+**Before the repo goes public (done 4 Nov, see "Going public" below).** `spend.jsonl` held local scratch paths with the macOS username; STATUS named the Modal workspace (gate M); LOG.md line 228 had an absolute local path; the README said "the camera housing's flat port" where the page says "the tank's flat window".
 
 ## Publish (task 6.2, 4 Nov)
 
@@ -921,10 +921,10 @@ Shots: 1 real pane alone, push, dream joins (Bare); 2 f0-f60 both panes, heat of
 
 **Line 6 retake (4 Nov, on the coordinator's ruling).** Point 2 above was an overclaim: the narration said the dream "goes through the far wall" while the plan view's path stops at 765 su of 837. Line 6 is now "Here, just under four seconds in, the far wall opens into a corridor that isn't there." (`film/script.md`, `tools/film/film.json`); only that line was read again (148 characters, one retake, free tier; `voice.py` replaced its entry in `film/vo/lines.json`). Both aspects recut: 69.4 s, -16.1 LUFS integrated, true peak -4.3 dBTP, no black frames; contact sheets and the shot-6 frames looked at; the 16:9 mp4 and poster are recopied into `web/public/film/`. The plain-words layer's chapter 2 now ends "The back wall opens into a corridor that isn't there." (`web/src/plainwords/words.ts`); tsc clean, Vitest 298 passed. Point 2 of the list above is resolved; the film still shows the plan path short of the wall, which now agrees with the words.
 
-## Going public (5 Nov 2026, hub call 91)
+## Going public (4 Nov 2026, hub call 91)
 
 Clearance's pre-flip list was done on the current tree (local paths made relative in `spend.jsonl` and LOG, the Modal account name removed, the README's "flat port" aligned to the page's "flat window", the live page named as `divetwin.studionephele.com` with the Vercel alias as a fallback only, the clearance notes and tests no longer naming a venue, STATUS marked DONE). The identifier scan on the tracked tree is clean.
 
-The full development history was scanned and is **not** published: it carries absolute local paths with the macOS username, the venue names the clearance notes once listed, and a clearance line that spelled out names the scan forbids. Rather than rewrite it, the public repo `aaronlsmiles/divetwin` has one commit, "Dive Twin, as shipped 5 Nov 2026", built from this tree on an orphan branch `public`; the 100-plus commits of working history stay in the private local clone.
+The full development history was scanned and is **not** published: it carries absolute local paths with the macOS username, the venue names the clearance notes once listed, and a clearance line that spelled out names the scan forbids. Rather than rewrite it, the public repo `aaronlsmiles/divetwin` has one commit, "Dive Twin, as shipped 4 Nov 2026", built from this tree on an orphan branch `public`; the 100-plus commits of working history stay in the private local clone.
 
 Licences: code MIT (`LICENSE`); the dataset CC BY 4.0, the derived depth pictures CC BY-NC-SA 4.0, the generated clips and the film outside any CC licence (`DATA-LICENSE.md`).
