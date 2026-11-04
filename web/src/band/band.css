@@ -1,0 +1,37 @@
+/* The findings band (hub call 92): between the title row and the stage, on the page ground, ink and muted only (gold is D above 3; blue
+   pencil is the plain-words layer's). Square, Geist, tokens only, no entrance motion. At 1440 it is two lines: the answer with the tally,
+   then the two surprises side by side. */
+.band { margin-top: 8px; display: grid; gap: 2px; }
+.band-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 24px; }
+.band-answer { margin: 0; font-size: var(--fs-section); font-weight: 600; line-height: 1.5; color: var(--text); }
+.tally { display: flex; flex-wrap: wrap; align-items: baseline; font-size: var(--fs-body); line-height: 1.5; color: var(--muted); }
+.tally-sep { color: var(--faint); white-space: pre; }
+.tally-btn { display: inline; background: none; border: 0; padding: 0; font: inherit; color: var(--text); cursor: pointer;
+  text-decoration: underline; text-decoration-color: var(--control); text-underline-offset: 3px; text-align: left; }
+.tally-n { font-weight: 600; font-variant-numeric: tabular-nums; }
+.tally-btn:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) { .tally-btn:hover { text-decoration-color: var(--text); transition: text-decoration-color var(--fast) var(--ease); } }
+.surprises { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2px 24px;
+  font-size: var(--fs-body); line-height: 1.5; color: var(--muted); }
+.surprises strong { font-weight: 600; color: var(--text); }
+@media (max-width: 1279px) { .surprises { grid-template-columns: minmax(0, 1fr); } }
+/* phone: the counts are 44 px touch targets, two to a row; the separators go */
+@media (max-width: 640px) {
+  .band { gap: 8px; }
+  .tally { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 12px; width: 100%; }
+  .tally-sep { display: none; }
+  .tally-btn { display: block; min-height: 44px; padding: 11px 0; line-height: 22px; }   /* inline text inside, so "5 can't be…" wraps as words */
+}
+
+/* What the band costs at 1440 x 900 is paid on the stage, so the evidence row's headers stay on the first screen (DESIGN.md, "Findings
+   band"): the band sits 8 px under the title row and 12 px over the stage, the stage's block padding is its inner gap (12), the key strip
+   has no extra top margin, and from 1280 up the two panes stand over the scrubber's own column (from the Play button's left edge to the
+   axis labels' right edge), so the frames sit straight over the curve that scrubs them and the start photograph keeps its gutter. */
+.band ~ .stage { margin-top: 12px; }
+@media (min-width: 1024px) {
+  .band ~ .stage { padding-block: 12px; }
+  .band ~ .stage .key-strip { margin-top: 0; }
+}
+@media (min-width: 1280px) {
+  .band ~ .stage .panes { margin-left: calc(112px + var(--gap)); }
+}

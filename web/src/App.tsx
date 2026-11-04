@@ -1,9 +1,11 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TopBar } from "./shell/TopBar";
 import { mediaBase, mediaUrl } from "./data/media";
 import { useClipsDoc } from "./data/useClipsDoc";
 import type { ClipsDoc } from "./data/types";
-import { clipTitle, finding } from "./lib/finding";
+import { clipTitle, finding, type FindingKind } from "./lib/finding";
+import { tally, tallyWords } from "./lib/tally";
+import { Band } from "./band/Band";
 import { useDiveState } from "./state/urlState";
 import { Stage } from "./stage/Stage";
 import { Scrubber, SCRUBBER_ID } from "./scrubber/Scrubber";
@@ -38,12 +40,28 @@ function Dive({ doc, base }: { doc: ClipsDoc; base: string }) {
   );
   const relief = <section className="panel panel-relief" key="relief"><h2>The two tanks as surfaces</h2><PlainNote id="relief" /><ReliefPanel doc={doc} clip={clip} frame={frame} base={base} /></section>;
   const numbers = <section className="panel panel-numbers" key="numbers"><h2>The numbers</h2><Numbers doc={doc} clip={clip} frame={frame} /></section>;
+  const reduce = () => typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
   // choosing a row in the table loads the stage, so bring the stage into view
   const pickFromTable = useCallback((id: string) => {
     setClip(id);
-    const reduce = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
-    document.getElementById("main")?.scrollIntoView?.({ behavior: reduce ? "auto" : "smooth" });
+    document.getElementById("main")?.scrollIntoView?.({ behavior: reduce() ? "auto" : "smooth" });
   }, [setClip]);
+  // a count in the findings band brings its clips forward: the table shows only them, and the line that says so takes focus and scrolls
+  // into view (call 92). The stage keeps its clip; choosing a row loads one, and "Show all" brings every clip back.
+  const [group, setGroup] = useState<FindingKind | null>(null);
+  // memoised: the frame changes 24 times a second while playing, and the table (memo) must not re-render for it
+  const shown = useMemo(() => (group === null ? null : tally(doc.clips).find((g) => g.kind === group) ?? null), [group, doc.clips]);
+  const only = useMemo(() => (shown === null ? null : new Set(shown.clips.map((c) => c.clip))), [shown]);
+  const [asked, setAsked] = useState(0);
+  const filterLine = useRef<HTMLParagraphElement>(null);
+  const showGroup = useCallback((kind: FindingKind) => { setGroup(kind); setAsked((n) => n + 1); }, []);
+  useEffect(() => {
+    if (asked === 0) return;
+    // the table's own section comes to the top, under the sticky bar (its scroll-margin), so its heading and the line both read
+    const line = filterLine.current;
+    line?.closest("section")?.scrollIntoView?.({ behavior: reduce() ? "auto" : "smooth", block: "start" });
+    line?.focus({ preventScroll: true });
+  }, [asked]);
   return (
     <>
       <div className="title-row">
@@ -57,6 +75,7 @@ function Dive({ doc, base }: { doc: ClipsDoc; base: string }) {
         </div>
         <Picker clips={doc.clips} clip={clip} onPick={setClip} />
       </div>
+      <Band clips={doc.clips} onShow={showGroup} />
       <PlainWordsMount slot="chapter-1" />
 
       <Stage doc={doc} clip={clip} frame={frame} base={base} playing={playing} setFrame={setFrame} setPlaying={setPlaying}>
@@ -75,9 +94,15 @@ function Dive({ doc, base }: { doc: ClipsDoc; base: string }) {
         <PlainWordsMount slot="chapter-3" />
         <Statement condition={clip.condition} />
         <ClipNotes clip={clip} />
-        <section className="panel" aria-labelledby="table-h">
+        <section className="panel panel-table" aria-labelledby="table-h">
           <h2 id="table-h">All {doc.clips.length} clips</h2>
-          <ClipTable clips={doc.clips} current={clip.clip} onPick={pickFromTable} />
+          {shown && (
+            <p className="table-filter" ref={filterLine} tabIndex={-1}>
+              <span>Showing the {shown.n} {shown.n === 1 ? "clip" : "clips"} that {tallyWords(shown.kind, shown.n)}.</span>{" "}
+              <button type="button" className="btn-text" onClick={() => setGroup(null)}>Show all {doc.clips.length}</button>
+            </p>
+          )}
+          <ClipTable clips={doc.clips} current={clip.clip} onPick={pickFromTable} only={only} />
         </section>
         <Credits />
       </div>

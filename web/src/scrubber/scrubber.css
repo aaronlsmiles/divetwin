@@ -1,8 +1,8 @@
 /* The scrubber: a 96 px track block (28 px of controls over 68 px of tracks) with the start photograph in the left gutter. */
 .scrubber { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: var(--gap); align-items: start; color: var(--stage-text); }
-.start-fig { margin: 0; display: grid; gap: 4px; }
+.start-fig { margin: 0; display: grid; gap: 3px; }
 .start-fig img { width: 112px; height: 63px; object-fit: cover; background: #000; }
-.start-fig figcaption { color: var(--stage-muted); font-size: var(--fs-small); line-height: 1.35; }
+.start-fig figcaption { color: var(--stage-muted); font-size: var(--fs-small); line-height: 1.25; }   /* two lines: 96 px with the photograph, the track's own height */
 .scrub-main { display: grid; gap: 0; min-width: 0; }
 .scrub-row { display: flex; align-items: center; gap: 12px; height: 28px; margin-bottom: 0; }
 .scrubber .btn { height: 28px; min-width: 28px; padding: 0 10px; background: transparent; color: var(--stage-text); border-color: var(--stage-muted); }

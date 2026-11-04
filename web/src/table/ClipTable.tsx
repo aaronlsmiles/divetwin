@@ -16,9 +16,10 @@ export const crumbOf = (c: Clip): string => {
 };
 
 /** All clips as one table (memoised: the frame changes 24 times a second while playing and the table does not depend on it). Rows load the stage; a cell with no value is a grey dash, a cell past a cap says unverifiable (never 0.00). */
-export const ClipTable = memo(function ClipTable({ clips, current, onPick }: { clips: Clip[]; current: string; onPick: (id: string) => void }) {
+/** `only`: the findings band's group (call 92), the clip ids to show; null shows every clip. */
+export const ClipTable = memo(function ClipTable({ clips, current, onPick, only = null }: { clips: Clip[]; current: string; onPick: (id: string) => void; only?: ReadonlySet<string> | null }) {
   const [sort, setSort] = useState<{ key: ColumnKey | null; dir: "asc" | "desc" }>({ key: null, dir: "asc" });
-  const rows = useMemo(() => sortRows(rowsOf(clips), sort.key, sort.dir), [clips, sort]);
+  const rows = useMemo(() => sortRows(rowsOf(clips), sort.key, sort.dir).filter((r) => only === null || only.has(r.clip.clip)), [clips, sort, only]);
   const toggle = (key: ColumnKey) => setSort((s) => (s.key === key ? (s.dir === "asc" ? { key, dir: "desc" } : { key: null, dir: "asc" }) : { key, dir: "asc" }));
   const cell = (text: string) => (text === DASH ? <span className="dash">{text}</span> : text);
   /** A D above 3 is set heavier so the departures can be scanned down the column: weight only, the colour stays as it is. */

@@ -30,3 +30,6 @@
   .clip-table td[data-col="d10"]:has(> .dash), .clip-table td[data-col="v10"]:has(> .dash) { display: none; }
   .clip-table td[data-label]::before { content: attr(data-label) " "; color: var(--faint); font-size: var(--fs-small); }
 }
+/* the findings band's group (call 92): the line that says the table shows only some clips, with the way back to all of them */
+.table-filter { margin: 0 0 8px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; color: var(--muted); }
+.panel-table { scroll-margin-top: calc(var(--bar-h) + 8px); }   /* brought to the top by a band count: clear of the sticky bar */

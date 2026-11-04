@@ -28,6 +28,7 @@ Play is native video playback, so a recording of it is as smooth as the browser'
 - `unverifiable` is never `0.00`: the pipeline writes `V = 0.0` after a travel cap, and the page checks `unverifiable_from` first.
 - Gold means D above 3 and nothing else (`src/test/gold.test.ts` reads the source; the e2e counts pixels), and no heat colour is typed in the page: the ramps, the hatch, the outline, the unseen grey and the floor map's violet all come from `clips.json`.
 - Units are su (uncorrected stereo units), never mm.
+- The findings band's tally is the finding line's own classification (`lib/finding.ts` `findingKind`, counted by `lib/tally.ts`), so a count and a finding line never disagree; `lib/tally.test.ts` holds it on the fixture and on the real `clips.json` (3 / 2 / 25 / 5), and the facts test scans the band (call 92, `../docs/DESIGN.md` "Findings band").
 - The plain-words layer (`src/plainwords/`, the hub's `docs/plain-words.md`) is additive: with it off the page is unchanged. `words.test.ts` holds its digits (D at 1 and 3, the 35 films from the real `clips.json`, "just under four seconds" for f88 at 24 fps), field words only in quotes, every quote a label the page shows, Flesch–Kincaid grade 6 or below, sentences of 14 words on average and none over 25, and each note placed once. `e2e/plain.spec.ts` walks the trail and checks AA contrast, Tab order, nothing over the media, and no overflow at 390 or with text at 200 %.
 
 ## The plain-words layer (task 4.4)

@@ -44,7 +44,32 @@ export function allowedFor(doc: ClipsDoc, c: Clip, frame: number): Set<string> {
   }
   // the table's columns are named after the D_at / V_at keys (seconds) the data has
   for (const o of doc.clips) out.push(...Object.keys(o.D_at));
+  out.push(...bandFigures(doc));
   return new Set(out);
+}
+
+/** The findings band's figures (call 92), by this file's own arithmetic on the raw arrays, not by lib/finding or lib/tally: the four
+ *  counts (a departure; above 3 without one; ran out or never measured; the rest), and the lowest measured V among the clips above 3
+ *  of each engine, which the second surprise may quote. */
+export function bandFigures(doc: ClipsDoc): string[] {
+  const measured = (o: Clip) => o.D.map((d, f) => (o.unverifiable_from !== null && f >= o.unverifiable_from ? null : d));
+  const above = (o: Clip) => measured(o).some((d) => d !== null && d > D_THRESHOLD);
+  const none = (o: Clip) => measured(o).every((d) => d === null);
+  const n = { departs: 0, spikes: 0, unchecked: 0, under: 0 };
+  for (const o of doc.clips) {
+    if (none(o)) n.unchecked++;
+    else if (o.first_D3 !== null) n.departs++;
+    else if (above(o)) n.spikes++;
+    else if (o.unverifiable_from !== null) n.unchecked++;
+    else n.under++;
+  }
+  const lowV: string[] = [];
+  for (const engine of new Set(doc.clips.map((o) => o.engine))) {
+    const vs = doc.clips.filter((o) => o.engine === engine && above(o))
+      .flatMap((o) => o.verified.filter((v, f): v is number => v !== null && (o.unverifiable_from === null || f < o.unverifiable_from)));
+    if (vs.length) lowV.push(Math.min(...vs).toFixed(2));
+  }
+  return [...Object.values(n).filter((x) => x > 0).map(String), ...lowV];
 }
 
 /** The numerals in some text. */

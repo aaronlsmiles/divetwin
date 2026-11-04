@@ -2,7 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { App } from "../App";
 import { clearCache, parseClips } from "../data/load";
-import { allowedFor, numerals, pageText, STATIC_NUMERALS, staticText, STRUCTURAL } from "./facts";
+import { allowedFor, bandFigures, numerals, pageText, STATIC_NUMERALS, staticText, STRUCTURAL } from "./facts";
+import { tally } from "../lib/tally";
 import { FIXTURE_IDS, readFixtureJson, stubFixtureFetch } from "./fixtureMedia";
 import { clipTitle, finding, findingFrame } from "../lib/finding";
 
@@ -46,6 +47,33 @@ describe("the page renders every clip in the fixture", () => {
   });
 });
 
+describe("the findings band on the page (hub call 92)", () => {
+  it("sits between the title row and the stage, and says the fixture's tally", async () => {
+    const { view } = await open(FIXTURE_IDS[0]);
+    const band = view.container.querySelector(".band")!;
+    expect(band.previousElementSibling!.classList.contains("title-row")).toBe(true);
+    const after = [...view.container.querySelectorAll(".title-row, .band, .stage")];
+    expect(after.map((e) => e.className.split(" ")[0])).toEqual(["title-row", "band", "stage"]);
+    expect(within(band as HTMLElement).getAllByRole("button").map((b) => b.textContent)).toEqual(["1 leaves the tank for good", "1 stays under 3", "2 can't be checked to the end"]);
+  });
+
+  it("a count filters the clip table to its clips and moves focus to the line that says so; Show all brings every clip back", async () => {
+    const { view } = await open(FIXTURE_IDS[0]);
+    const scrolled = vi.fn(), was = Element.prototype.scrollIntoView;
+    Element.prototype.scrollIntoView = scrolled;
+    afterEach(() => { Element.prototype.scrollIntoView = was; });
+    fireEvent.click(screen.getByRole("button", { name: /^2 can't be checked to the end/ }));
+    const line = await screen.findByText(/^Showing the 2 clips that can't be checked to the end/);
+    await waitFor(() => expect(document.activeElement).toBe(line.closest("[tabindex]")));
+    expect(scrolled).toHaveBeenCalled();
+    const rows = () => [...view.container.querySelectorAll(".clip-table tbody tr")].map((r) => within(r as HTMLElement).getByRole("button").getAttribute("aria-label"));
+    expect(rows()).toEqual([clipTitle(doc.clips[1]), clipTitle(doc.clips[2])]);
+    fireEvent.click(screen.getByRole("button", { name: `Show all ${doc.clips.length}` }));
+    expect(rows()).toHaveLength(doc.clips.length);
+    expect(screen.queryByText(/^Showing the/)).toBeNull();
+  });
+});
+
 describe("no figure on the page is hand-typed", () => {
   const cases: [string, number][] = [
     [FIXTURE_IDS[0], 88], [FIXTURE_IDS[0], 0], [FIXTURE_IDS[0], 120],
@@ -82,6 +110,19 @@ describe("no figure on the page is hand-typed", () => {
   it("the structural list is short and each entry says where it comes from", () => {
     expect(Object.keys(STRUCTURAL).sort()).toEqual(["1", "12", "200", "3"]);
     for (const why of Object.values(STRUCTURAL)) expect(why.length).toBeGreaterThan(10);
+  });
+  it("the findings band is scanned too: its counts and its V trace to the data by the facts file's own arithmetic, and a typed count is caught", async () => {
+    const { view, clip } = await open(FIXTURE_IDS[0], 88);
+    const band = view.container.querySelector(".band") as HTMLElement;
+    const inBand = numerals(pageText(band));
+    expect(inBand.length).toBeGreaterThan(3);
+    expect(bandFigures(doc)).toEqual(["1", "2", "1", "1.00"]);            // departs, unchecked, under; the departing Gen-4.5 clip's lowest V
+    for (const t of tally(doc.clips)) expect(bandFigures(doc)).toContain(String(t.n));
+    const typed = document.createElement("span");
+    typed.textContent = "7 leave the tank for good";
+    band.querySelector(".tally")!.appendChild(typed);
+    const unknown = numerals(pageText(view.container)).filter((n) => !allowedFor(doc, clip, 88).has(n));
+    expect(unknown).toEqual(["7"]);
   });
   it("and the check can fail: a figure the data does not hold is caught", async () => {
     const { view, clip } = await open(FIXTURE_IDS[0], 88);

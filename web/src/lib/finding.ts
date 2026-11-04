@@ -12,6 +12,20 @@ const vClause = (v: number | null, moving: boolean): string =>
   v === null ? "" : v === 1 ? `every pixel still verified (V ${fmtV(v)})` : v >= 0.995 ? `V ${fmtV(v)}`
     : `V ${fmtV(v)}: part of the frame is unseen${moving ? ", or covered by a tracked moving object" : ""}`;
 
+/** The finding line's four forms, and the band's tally (hub call 92): one classification, so a count and a line can never disagree.
+ *  departs    a departure (D above 3 for 12 frames in a row), whatever comes after it
+ *  spikes     above 3, but never for 12 in a row
+ *  under      stays under 3 on every measured frame, and is measured to the end
+ *  unchecked  ran out of verification first (a travel cap or a lost path), or no frame could be measured */
+export type FindingKind = "departs" | "spikes" | "under" | "unchecked";
+
+export function findingKind(c: Clip): FindingKind {
+  if (peakD(c) === null) return "unchecked";
+  if (c.first_D3 !== null) return "departs";
+  if (framesAbove(c) > 0) return "spikes";
+  return c.unverifiable_from !== null ? "unchecked" : "under";
+}
+
 /**
  * The line under the title (docs/DESIGN.md), computed from the clip and never typed:
  *   departure   "D passes 3 at frame 88 (3.7 s), 711 su in; every pixel still verified (V 1.00)"
@@ -23,19 +37,23 @@ export function finding(c: Clip): string {
   const peak = peakD(c);
   const at = (f: number) => `frame ${f} (${fmtSeconds(f, c.fps)} s)`;
   const ran = c.unverifiable_from !== null ? `verification ran out at ${at(c.unverifiable_from)}: ${reasonText(c)}` : null;
-  if (peak === null) return ran ? `${ran[0].toUpperCase()}${ran.slice(1)}; no frame could be measured.` : "No frame could be measured.";
-  if (c.first_D3 !== null) {
-    const f = c.first_D3;
-    const fwd = c.path[f]?.[2];
-    const where = fwd === null || fwd === undefined ? "" : `, ${fmtSu(fwd)} su in`;
-    return `D passes ${D_THRESHOLD} at ${at(f)}${where}; ${vClause(c.verified[f], c.moving_track[f] === true)}${ran ? `; ${ran}` : ""}`;
+  const cap = (t: string) => `${t[0].toUpperCase()}${t.slice(1)}`;
+  const kind = findingKind(c);
+  if (peak === null) return ran ? `${cap(ran)}; no frame could be measured.` : "No frame could be measured.";
+  switch (kind) {
+    case "departs": {
+      const f = c.first_D3!;
+      const fwd = c.path[f]?.[2];
+      const where = fwd === null || fwd === undefined ? "" : `, ${fmtSu(fwd)} su in`;
+      return `D passes ${D_THRESHOLD} at ${at(f)}${where}; ${vClause(c.verified[f], c.moving_track[f] === true)}${ran ? `; ${ran}` : ""}`;
+    }
+    case "spikes": {
+      const n = framesAbove(c);
+      return `D tops ${D_THRESHOLD} on ${n} frame${n === 1 ? "" : "s"} but never holds it for ${D_RUN}; peak ${fmtD(peak.value)} at frame ${peak.frame}${ran ? `; ${ran}` : ""}`;
+    }
+    case "unchecked": return `${cap(ran!)}. D stayed under ${D_THRESHOLD} up to there; peak ${fmtD(peak.value)} at frame ${peak.frame}`;
+    case "under": return `D stays under ${D_THRESHOLD}; peak ${fmtD(peak.value)} at frame ${peak.frame}`;
   }
-  const n = framesAbove(c);
-  if (n > 0) {
-    return `D tops ${D_THRESHOLD} on ${n} frame${n === 1 ? "" : "s"} but never holds it for ${D_RUN}; peak ${fmtD(peak.value)} at frame ${peak.frame}${ran ? `; ${ran}` : ""}`;
-  }
-  if (ran) return `${ran[0].toUpperCase()}${ran.slice(1)}. D stayed under ${D_THRESHOLD} up to there; peak ${fmtD(peak.value)} at frame ${peak.frame}`;
-  return `D stays under ${D_THRESHOLD}; peak ${fmtD(peak.value)} at frame ${peak.frame}`;
 }
 
 /** Where the cursor opens: the departure, else the clip's peak D, else the start. The finding and the cursor agree. */
