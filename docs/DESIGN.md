@@ -225,6 +225,53 @@ What the worst cases found, and the fix for each:
 
 **Inspector** (`inspect.mjs --app`, 1440, 768 and 390): 0 FAIL. The WARNs are the four defended above and one the earlier pass did not list: `below-fold` ("1 of 8 blocks start on the first screen" at 1440). It is not new (the build before this pass gives the same list); the stage is the biggest thing on the page and takes the first screen by design, and the evidence row's headers are on it (883 on a first visit), as an e2e test holds.
 
+## Findings band (4 Nov, call 92)
+
+Aaron asked for it (hub call 92). A first visit saw the clip's breadcrumb as the h1 and one clip's finding; the study's answer and its tally were nowhere on the page. The band sits between the title row and the stage. Where it departs from the sections above, this one wins.
+
+**What it says** (`src/band/Band.tsx`)
+- **The answer**, at statement size (16/600), as a paragraph and not a heading: "A dream can be checked against the real tank frame by frame, until it leaves what was measured."
+- **The tally**, computed from `clips.json` when the page runs: "3 leave the tank for good · 2 spike past 3 · 25 stay under 3 · 5 can't be checked to the end".
+  - It reuses the finding line's own classification. `lib/finding.ts` `findingKind` names the four forms (departs, spikes, under, unchecked), and `finding()` switches on it, so a count and a finding line cannot disagree.
+  - `lib/tally.ts` counts by it, and a kind no clip has is left out. A departure that later runs out counts as a departure, because its finding line leads with the departure.
+- **The two surprises**, one line each, technical voice. Both wordings in the brief were checked against THESIS.md and the data, and both over-claimed, so the wording changed and the data did not:
+  - "**Dreams open the tank up:** in every clip past 3, the invented space reads farther than the real tank." The brief's "every flare reads farther" was too wide. The outlined actors on Air Wan B and Saltwater Wan B flare warm (nearer), though D leaves them out, and Freshwater, enhanced N has a nearer slab where its hatch frame stands. Measured on the heat videos over each clip's frames above 3: the pale blue ("reads farther") share grows from 0 at frame 0 to 19–59 % in all five clips past 3 (LOG "Findings band").
+  - "**Only D sees a dream leave:** the Gen-4.5 clips past 3 keep V at 1.00; the rebuilt tank still covers the frame." The brief's "V stays near 1" was not true of the Wan departures: V is 0.79 and 0.67 at their departure frames and 0.54 at 5 s, where tracked actors are taken out of V. The engine and the 1.00 are computed (`steadyV`: the one engine whose clips past 3 all keep V at 0.995 or above on every measured frame, with at least one departure among them). If the data stops bearing the line out, it is left out.
+- No gold (the band shows no D above 3) and no blue pencil. Square, Geist, tokens only. No entrance motion; only the counts' underline darkens on hover, under a fine pointer.
+
+**What a count does: it filters the clip table to its clips.** It does not load the clearest example.
+- Pressing a count shows only that group in the table. The table's section scrolls to the top, clear of the sticky bar, and focus moves to the line "Showing the 3 clips that leave the tank for good." Tab goes on to "Show all 35".
+- Each count is a button named by its own words, then what it does ("3 leave the tank for good: show them in the clip table"), so the label is in the name.
+- The stage keeps its clip, and choosing a row loads one, as before.
+- **Why the filter:** it brings every clip of the group forward, one Enter away from the stage. "The clearest example" would show one clip of 25, and for "stay under 3" or "can't be checked to the end" the choice of clearest would be a judgement the data does not make.
+
+**The fold** (the e2e test is unchanged, and the rule above still holds)
+- The band alone cost 59 px. With the invite answered the headers fell to 907, against a limit of 860 so that their first line also shows; on a first visit they fell to 955, against 900.
+- The first screen had no free row to give it. The title row is 1392 px wide and full: the breadcrumb and finding on the left, the picker's 835 px on the right. Beside the picker it would have taken four lines instead of two.
+- So the stage pays for it, with nothing taken from the scrubber, the key strip or the media's aspect ratio:
+  - the band sits 8 px under the title row and 12 px over the stage;
+  - from 1024 up, the stage's block padding is its own inner gap (12) and the key strip has no extra top margin;
+  - the start photograph's caption is set at 1.25, so the scrubber row is the track's own 96 px (it was 99);
+  - **from 1280 up, the two panes stand over the scrubber's main column,** from the Play button's left edge to the axis labels' right edge. The frames sit straight over the curve that scrubs them, and the photograph keeps its gutter. At 1440 each pane is 608 × 342 (it was 672 × 378), and the stage is still the biggest thing on the page.
+- Now the headers' bottoms are at **847** with the invite answered and **895** on a first visit. They were 848 and 896, with the same margins as before.
+- Tried and dropped: a centred cap on the panes' width, driven by the viewport's height. At 1440 × 900 it gave 604 px panes, but only 2 px of margin on a first visit, through a constant tied to every height above it.
+
+**Phone:** the band follows the title row (the picker), then the stage, at every size. The DOM is the same everywhere, so the picker stays first in Tab order (Verify pass). The answer wraps to three lines, the counts are 44 px targets two to a row, and the surprises stack.
+
+**Checks:**
+- Vitest (320, from 298):
+  - `lib/tally.test.ts`: every clip's finding line has the form its kind says, on the fixture, made cases and the real 35. The tally is 3/2/25/5, and the facts file's own count agrees. `steadyV` holds on the real file.
+  - `band/Band.test.tsx`.
+  - `test/page.test.tsx`: the band in the page, a count filtering the table. The facts test now scans the band, with its figures from `facts.ts` `bandFigures` by its own arithmetic, and a typed count is caught.
+- `e2e/band.spec.ts` at 1440 and 390, light and dark:
+  - the words and counts against the served `clips.json`;
+  - the band between the title row and the stage, with no gold pixel and nothing off the page;
+  - two lines at 1440, 44 px targets on a phone;
+  - each count by keyboard, from the picker: Tab, Enter, the table holds exactly that group, the focused line is readable once the scroll has settled, and "Show all" restores;
+  - axe with the filter on.
+- The whole e2e suite was green twice in a row (193 passed, 15 skipped by design). Axe found 0 violations.
+- The inspector (`--app`, 1440, 768 and 390) gave 0 FAIL. Its WARNs are the four defended above (`no-poster`, `ragged-row`, `below-fold`, `numeric-align`); `colour-sprawl` no longer fires.
+
 ## Checks this direction must pass
 
 - `inspect.mjs --app` gives 0 FAIL at 1440, 768 and 390, with the colour share defended (the stage's media are pictures, not chrome).
