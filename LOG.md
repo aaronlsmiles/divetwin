@@ -928,3 +928,47 @@ Clearance's pre-flip list was done on the current tree (local paths made relativ
 The full development history was scanned and is **not** published: it carries absolute local paths with the macOS username, the venue names the clearance notes once listed, and a clearance line that spelled out names the scan forbids. Rather than rewrite it, the public repo `aaronlsmiles/divetwin` has one commit, "Dive Twin, as shipped 4 Nov 2026", built from this tree on an orphan branch `public`; the 100-plus commits of working history stay in the private local clone.
 
 Licences: code MIT (`LICENSE`); the dataset CC BY 4.0, the derived depth pictures CC BY-NC-SA 4.0, the generated clips and the film outside any CC licence (`DATA-LICENSE.md`).
+
+## Findings band (4 Nov, hub call 92)
+
+Opus 5.5 · high, on Aaron's ask (hub call 92). The page answered its question only in pieces: one clip's finding line, a note below the fold, and the opt-in plain words. A band now sits between the title row and the stage. It holds the answer in one line, a tally computed from `clips.json` (each count brings its clips forward in the clip table) and the two surprises. Design and reasons: `docs/DESIGN.md` "Findings band".
+
+**The tally reuses the finding line's classification.** `lib/finding.ts` now names its four forms (`findingKind`: departs, spikes, under, unchecked), and `finding()` switches on it; `lib/tally.ts` counts by it. On the real file it gives 3 / 2 / 25 / 5, which is THESIS.md's tally:
+- leave for good: Freshwater, enhanced Gen-4.5 N, and Saltwater Wan B and N;
+- spike past 3: Air Wan B, and Saltwater Gen-4.5 N;
+- can't be checked to the end: Air Wan N (path lost at f74) and the four pellets Gen-4.5 clips (travel cap).
+
+A test holds that every one of the 35 finding lines has the form its kind says. The facts file counts the same groups again by its own arithmetic, and the two agree.
+
+**The two surprises were checked, and both wordings in the brief were narrowed.**
+1. *"Every flare reads farther."* Measured on `heat.mp4` over each clip's frames with D above 3 (a scratch script, not committed). It counts pale pixels (mean RGB above 140) that are blue (B above R + 40) or warm (R above B + 40), against frame 0.
+
+   | Clip | Blue ("reads farther"), frame 0 → frames above 3 | Warm, frame 0 → frames above 3 |
+   |---|---|---|
+   | Air Wan B | 0 → 19 % | 12 → 48 % |
+   | Freshwater, enhanced Gen-4.5 N | 0 → 58 % | 11 → 10 % |
+   | Saltwater Gen-4.5 N | 0 → 58 % | 11 → 12 % |
+   | Saltwater Wan B | 0 → 41 % | 11 → 47 % |
+   | Saltwater Wan N | 0 → 59 % | 12 → 17 % |
+
+   The invented space reads farther in all five. The warm growth on the two Wan B clips is the outlined actors, which are drawn in the heat but left out of D (LOG round 3, "Each clip's map"). The page says "in every clip past 3, the invented space reads farther than the real tank", not "every flare".
+2. *"V stays near 1."* Not on the Wan departures. V is 0.79 (Saltwater Wan B, f102) and 0.67 (Saltwater Wan N, f97) at the departure, and 0.54 at 5 s, where tracked actors are out of V. The two Gen-4.5 clips past 3 keep V at 0.9995 or above on every frame (shown as 1.00). The line names the engine, and both the engine and the 1.00 are computed (`steadyV`). If the data stops bearing the line out, it is left out.
+
+**The fold.** The band cost 59 px: with the invite answered the evidence headers fell to 907 (limit 860), and on a first visit to 955 (limit 900). The stage paid for it, without touching the scrubber, the key or the media's aspect ratio:
+- block padding 12;
+- no extra key margin;
+- the start caption at 1.25, so the scrubber row is 96 px;
+- from 1280 up, the panes over the scrubber's column (608 × 342 at 1440, from 672 × 378).
+
+The headers are now at 847 answered and 895 on a first visit; they were 848 and 896.
+
+**Verified.**
+- tsc clean; Vitest 320 (from 298).
+- Playwright: 208 tests, 193 passed and 15 skipped by design, twice in a row. That includes the new `e2e/band.spec.ts` (28) and axe with 0 violations.
+- One check was made stricter after it passed by luck: the scroll-to-table test had caught a smooth scroll passing a good position on its way to one under the sticky bar. It now judges a still page. The fix scrolls the table's section with a scroll margin for the bar.
+- Inspector `--app`: 0 FAIL; four WARNs, all defended in DESIGN.
+- Screenshots at 1440 and 390, light and dark, first visit and answered, and with a filter on, looked at.
+
+**Deployed** with `GO_LIVE=yes tools/deploy/deploy-production.sh`; the identifier scan in `stage.sh` passed.
+- `https://divetwin.studionephele.com/` and `/?plain=1` answer 200, and `/media/clips.json` answers 200 as `application/json`. No Range request was sent to `/media/*.json` or `.png`.
+- A fresh Chromium at 1440 and 390, light and dark: the band reads "3 leave the tank for good · 2 spike past 3 · 25 stay under 3 · 5 can't be checked to the end"; all three videos ready (readyState 4); no "could not be loaded" line; the console clean apart from the two allowed notices; the evidence headers at 895 on a first visit at 1440.
